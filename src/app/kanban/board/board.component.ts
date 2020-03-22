@@ -1,24 +1,23 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { BoardService } from "../board.service";
+import { Component, Input } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { Task } from "../board.model";
-import { MatDialog } from "@angular/material/dialog";
 import { TaskDialogComponent } from "../dialogs/task-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { BoardService } from "../board.service";
+import { Task } from "../board.model";
 
 @Component({
   selector: "app-board",
   templateUrl: "./board.component.html",
   styleUrls: ["./board.component.scss"]
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent {
   @Input() board;
+
   constructor(private boardService: BoardService, private dialog: MatDialog) {}
 
-  ngOnInit() {}
-
   taskDrop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.board.task, event.previousIndex, event.currentIndex);
-    this.boardService.updateTasks(this.board.id, this.board.task);
+    moveItemInArray(this.board.tasks, event.previousIndex, event.currentIndex);
+    this.boardService.updateTasks(this.board.id, this.board.tasks);
   }
 
   openDialog(task?: Task, idx?: number): void {
@@ -40,9 +39,13 @@ export class BoardComponent implements OnInit {
         } else {
           const update = this.board.tasks;
           update.splice(result.idx, 1, result.task);
-          this.boardService.updateTasks(this.board.id, this.board.task);
+          this.boardService.updateTasks(this.board.id, this.board.tasks);
         }
       }
     });
+  }
+
+  handleDelete() {
+    this.boardService.deleteBoard(this.board.id);
   }
 }

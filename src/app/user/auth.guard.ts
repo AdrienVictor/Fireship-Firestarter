@@ -14,6 +14,7 @@ import { SnackService } from "../services/snack.service";
 })
 export class AuthGuard implements CanActivate {
   constructor(private afAuth: AngularFireAuth, private snack: SnackService) {}
+
   async canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
